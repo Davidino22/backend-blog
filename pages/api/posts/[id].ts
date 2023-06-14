@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next"
 import { connect } from "../../../utils/connection"
-import { ResponseFuncs, MessageType } from "../../../utils/types"
-import Message from "../../../models/Message"
+import { ResponseFuncs, PostType } from "../../../utils/types"
+import Post from "../../../models/Post"
 import Cors from 'cors'
 
 // Initializing the cors middleware
@@ -43,21 +43,21 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // Potential Responses for /todos/:id
   const handleCase: ResponseFuncs = {
     // RESPONSE FOR GET REQUESTS
-    GET: async (req: NextApiRequest, res: NextApiResponse<MessageType>) => {
+    GET: async (req: NextApiRequest, res: NextApiResponse<PostType>) => {
       await connect() // connect to database
-      res.json(await Message.findById(id).catch(catcher))
+      res.json(await Post.findById(id).catch(catcher))
     },
     // RESPONSE PUT REQUESTS
-    PUT: async (req: NextApiRequest, res: NextApiResponse<MessageType>) => {
+    PUT: async (req: NextApiRequest, res: NextApiResponse<PostType>) => {
       await connect() // connect to database
       res.json(
-        await Message.findByIdAndUpdate(id, req.body, { new: true }).catch(catcher)
+        await Post.findByIdAndUpdate(id, req.body, { new: true }).catch(catcher)
       )
     },
     // RESPONSE FOR DELETE REQUESTS
-    DELETE: async (req: NextApiRequest, res: NextApiResponse<MessageType>) => {
+    DELETE: async (req: NextApiRequest, res: NextApiResponse<PostType>) => {
       await connect() // connect to database
-      res.json(await Message.findByIdAndRemove(id).catch(catcher))
+      res.json(await Post.findByIdAndRemove(id).catch(catcher))
     },
   }
 

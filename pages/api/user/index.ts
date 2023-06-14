@@ -1,7 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next"
 import { connect } from "../../../utils/connection"
-import { MessageType, ResponseFuncs } from "../../../utils/types"
-import  Message from "../../../models/Message"
+import { PostType, ResponseFuncs } from "../../../utils/types"
+import  User from "../../../models/User"
+import bcrypt from 'bcrypt'
+const saltRounds = 10;
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   //capture request method, we type it as a key of ResponseFunc to reduce typing later
@@ -13,14 +15,25 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // Potential Responses
   const handleCase: ResponseFuncs = {
     // RESPONSE FOR GET REQUESTS
-    GET: async (req: NextApiRequest, res: NextApiResponse<MessageType[] | void>) => {
+    GET: async (req: NextApiRequest, res: NextApiResponse<PostType[] | void>) => {
       await connect() // connect to database
-      res.json(await Message.find({}).catch(catcher))
+      res.json(await User.find({}).catch(catcher))
     },
     // RESPONSE POST REQUESTS
-    POST: async (req: NextApiRequest, res: NextApiResponse<MessageType>) => {
-      await connect() // connect to database
-      res.json(await Message.create(req.body).catch(catcher))
+    POST: async (req: NextApiRequest, res: NextApiResponse<PostType>) => {
+      const email = req.body.email;
+      const password = req.body.password;
+
+      bcrypt.genSalt(saltRounds, function(err, salt) {
+        bcrypt.hash(password, salt, async function(err, hash) {
+            // Store hash in your password DB.
+
+            await connect() // connect to database
+            res.json(await User.create({email, password: hash}).catch(catcher))
+        });
+    });
+
+      
     },
   }
 
