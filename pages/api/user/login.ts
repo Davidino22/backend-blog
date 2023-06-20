@@ -3,6 +3,7 @@ import { connect } from "../../../utils/connection"
 import { PostType, ResponseFuncs } from "../../../utils/types"
 import User from "../../../models/User"
 import bcrypt from 'bcrypt'
+import allowCors from '../../../utils/allowCors';
 
 interface ErrorType {
   error: string
@@ -45,7 +46,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   else res.status(400).json({ error: "No Response for This Request" })
 }
 
-export default handler
+export default allowCors(handler);
 
 export const config = {
   api: {

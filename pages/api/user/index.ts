@@ -4,6 +4,7 @@ import { PostType, ResponseFuncs } from "../../../utils/types"
 import  User from "../../../models/User"
 import bcrypt from 'bcrypt'
 const saltRounds = 10;
+import allowCors from '../../../utils/allowCors';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   //capture request method, we type it as a key of ResponseFunc to reduce typing later
@@ -33,7 +34,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         });
     });
 
-      
+
     },
   }
 
@@ -43,7 +44,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   else res.status(400).json({ error: "No Response for This Request" })
 }
 
-export default handler
+export default allowCors(handler);
 
 export const config = {
   api: {
