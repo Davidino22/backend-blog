@@ -7,6 +7,10 @@ const ObjectId = Schema.Types.ObjectId
     content: String,
     title: String,
     userId: ObjectId,
+    comments:  {
+      type: [ObjectId],
+      required: false
+    }
   })
 
   // OUR post MODEL

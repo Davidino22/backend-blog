@@ -16,7 +16,15 @@ export interface PostType {
   _id?: ObjectId
   userId: ObjectId
   content: string
-  title: string
+  title: string,
+  comments?: [ObjectId]
+}
+// Interface to define our comment model on the frontend
+export interface CommentType {
+  _id?: ObjectId
+  userId: ObjectId
+  postId: ObjectId
+  text: string
 }
 // Interface to define our user model on the frontend
 export interface UserType {
