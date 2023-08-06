@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next"
 import { connect } from "../../../utils/connection"
 import { PostType, ResponseFuncs } from "../../../utils/types"
 import  Post from "../../../models/Post"
+import allowCors from '../../../utils/allowCors';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   //capture request method, we type it as a key of ResponseFunc to reduce typing later
@@ -30,7 +31,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   else res.status(400).json({ error: "No Response for This Request" })
 }
 
-export default handler
+export default allowCors(handler);
 
 export const config = {
   api: {

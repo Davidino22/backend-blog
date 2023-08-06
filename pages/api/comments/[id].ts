@@ -3,6 +3,8 @@ import { connect } from "../../../utils/connection"
 import { ResponseFuncs, CommentType } from "../../../utils/types"
 import Comment from "../../../models/Comment"
 import Cors from 'cors'
+import Post from "@/models/Post"
+import { PostType } from "../../../utils/types"
 
 // Initializing the cors middleware
 // You can read more about the available options here: https://github.com/expressjs/cors#configuration-options
@@ -57,7 +59,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     // RESPONSE FOR DELETE REQUESTS
     DELETE: async (req: NextApiRequest, res: NextApiResponse<CommentType>) => {
       await connect() // connect to database
-      res.json(await Comment.findByIdAndRemove(id).catch(catcher))
+      const deletedComment = await Comment.findByIdAndRemove(id).catch(catcher);
+
+      const postId = deletedComment.postId;
+
+      const targetPost:PostType = await Post.findById(postId).catch(catcher);
+
+      const filteredComments = targetPost.comments.filter(comment => comment.toString() !== id);
+
+
+      await Post.findByIdAndUpdate(postId, {comments: filteredComments}),
+      res.json(deletedComment)
     },
   }
 

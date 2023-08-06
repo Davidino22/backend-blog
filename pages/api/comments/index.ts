@@ -3,6 +3,7 @@ import { connect } from "../../../utils/connection"
 import { CommentType, PostType, ResponseFuncs } from "../../../utils/types"
 import Comment from "../../../models/Comment"
 import Post from "../../../models/Post"
+import allowCors from '../../../utils/allowCors';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   //capture request method, we type it as a key of ResponseFunc to reduce typing later
@@ -24,15 +25,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       const postId = req.body.postId;
       const newComment = await Comment.create(req.body).catch(catcher);
       const oldPost:PostType = await Post.findById(postId).catch(catcher)
-      
+
       let newComments
       if ('comments' in oldPost && Array.isArray(oldPost.comments)) {
-        
+
         newComments = [...oldPost.comments, newComment._id];
       } else {
         newComments = [newComment._id];
       }
-     
+
       const updatedPost:PostType = await Post.findByIdAndUpdate(postId, { comments: newComments }, { new: true }).catch(catcher)
        res.json({updatedPost, newComment})
     },
@@ -44,7 +45,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   else res.status(400).json({ error: "No Response for This Request" })
 }
 
-export default handler
+export default allowCors(handler);
 
 export const config = {
   api: {
