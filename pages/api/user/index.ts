@@ -30,7 +30,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             // Store hash in your password DB.
 
             await connect() // connect to database
-            res.json(await User.create({email, password: hash}).catch(catcher))
+            const createdUser = await User.create({email, password: hash}).catch(catcher)
+            console.log(createdUser)
+            delete createdUser["password"]
+            console.log(createdUser)
+            res.json(createdUser)
         });
     });
 

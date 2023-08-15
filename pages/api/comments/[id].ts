@@ -63,13 +63,20 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
       const postId = deletedComment.postId;
 
-      const targetPost:PostType = await Post.findById(postId).catch(catcher);
+      const targetPost: PostType = await Post.findById(postId).catch(catcher);
 
-      const filteredComments = targetPost.comments.filter(comment => comment.toString() !== id);
+      let filteredComments: Array<any>;
+      if (targetPost.comments) {
+         filteredComments = targetPost.comments.filter(comment => comment.toString() !== id);
+      } else {
+        filteredComments = [];
+      }
 
 
-      await Post.findByIdAndUpdate(postId, {comments: filteredComments}),
-      res.json(deletedComment)
+
+
+      await Post.findByIdAndUpdate(postId, { comments: filteredComments }),
+        res.json(deletedComment)
     },
   }
 
