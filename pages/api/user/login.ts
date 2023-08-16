@@ -30,7 +30,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       bcrypt.compare(password, user.password, function (err, result) {
         // result == true
         if (result == true) {
-          res.json(user)
+          res.json(user.select('_id email'))
         } else {
           res.status(400).json({error : 'Information not correct'})
         }

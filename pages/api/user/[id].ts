@@ -45,19 +45,19 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     // RESPONSE FOR GET REQUESTS
     GET: async (req: NextApiRequest, res: NextApiResponse<UserType>) => {
       await connect() // connect to database
-      res.json(await User.findById(id).catch(catcher))
+      res.json(await User.findById(id).select('_id email').catch(catcher))
     },
     // RESPONSE PUT REQUESTS
     PUT: async (req: NextApiRequest, res: NextApiResponse<UserType>) => {
       await connect() // connect to database
       res.json(
-        await User.findByIdAndUpdate(id, req.body, { new: true }).catch(catcher)
+        await User.findByIdAndUpdate(id, req.body, { new: true }).select('_id email').catch(catcher)
       )
     },
     // RESPONSE FOR DELETE REQUESTS
     DELETE: async (req: NextApiRequest, res: NextApiResponse<UserType>) => {
       await connect() // connect to database
-      res.json(await User.findByIdAndRemove(id).catch(catcher))
+      res.json(await User.findByIdAndRemove(id).select('_id email').catch(catcher))
     },
   }
 
