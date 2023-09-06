@@ -27,10 +27,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       await connect() // connect to database
       const user = await User.findOne({ email }).catch(catcher)
 
+
+
       bcrypt.compare(password, user.password, function (err, result) {
         // result == true
         if (result == true) {
-          res.json(user.select('_id email'))
+
+          user.password = undefined;
+
+          res.json(user)
         } else {
           res.status(400).json({error : 'Information not correct'})
         }
