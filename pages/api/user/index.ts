@@ -32,7 +32,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             await connect() // connect to database
             const createdUser = await User.create({email, password: hash}).catch(catcher)
             console.log(createdUser)
-            delete createdUser["password"]
+            createdUser.password = undefined;
+
             console.log(createdUser)
             res.json(createdUser)
         });
